@@ -1,7 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import { 
     getAuth,
-    signInWithRedirect, signInWithPopup, GoogleAuthProvider 
+    signInWithRedirect, signInWithPopup, GoogleAuthProvider ,
+    createUserWithEmailAndPassword as firebaseCreateUserWithEmailAndPassword,
 } from 'firebase/auth'
 
 import {
@@ -10,6 +11,7 @@ import {
   getDoc,
   setDoc,
 } from 'firebase/firestore'
+
 const firebaseConfig = {
     apiKey: "AIzaSyAyalV19RzYS58K6Y7kLzImdT0KagGshlI",
     authDomain: "pstgems-db.firebaseapp.com",
@@ -32,9 +34,14 @@ const firebaseConfig = {
   export const auth = getAuth();
   export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 
+  export const signInWithGoogleRedirect = () => signInWithRedirect(auth, provider);
+
   export const db = getFirestore();
 
-  export const createUserDocumentFromAuth = async (userAuth) => {
+  export const createUserDocumentFromAuth = async (userAuth,
+    additionalInformation = {}
+  ) => {
+    if(!userAuth) return;
     // essentially saying, give me the doc reference inside database 'db', under the collection 'users', with 'userAth.uid'
     const userDocRef = doc(db, 'users', userAuth.uid);
 
@@ -51,7 +58,8 @@ const firebaseConfig = {
         await setDoc(userDocRef,{
           displayName,
           email,
-          createdAt
+          createdAt,
+          ...additionalInformation
         });
       } catch(error){
           console.log('error creating the user', error.message);
@@ -60,4 +68,10 @@ const firebaseConfig = {
 
     // if user exists
     return userDocRef;
+  };
+
+  export const createAuthUserWithEmailAndPassword = async (email, password) => {
+    if(!email || !password) return;
+
+    return await firebaseCreateUserWithEmailAndPassword(auth, email, password);
   }
