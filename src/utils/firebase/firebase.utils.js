@@ -2,9 +2,10 @@ import { initializeApp } from 'firebase/app';
 import { 
     getAuth,
     signInWithRedirect, signInWithPopup, GoogleAuthProvider ,
-    createUserWithEmailAndPassword as firebaseCreateUserWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword
 } from 'firebase/auth'
-
+// firebaseCreateUserWithEmailAndPassword
 import {
   getFirestore,
   doc,
@@ -24,6 +25,9 @@ const firebaseConfig = {
   
   // Initialize Firebase
   const firebaseApp = initializeApp(firebaseConfig);
+
+  // Enable debug logging
+getAuth().settings.logLevel = 'debug';
 
   const provider = new GoogleAuthProvider();
   
@@ -73,5 +77,22 @@ const firebaseConfig = {
   export const createAuthUserWithEmailAndPassword = async (email, password) => {
     if(!email || !password) return;
 
-    return await firebaseCreateUserWithEmailAndPassword(auth, email, password);
+    return await createUserWithEmailAndPassword(auth, email, password);
   }
+
+  export const signInAuthUserWithEmailAndPassword = async (email, password) => {
+    if(!email || !password) return;
+
+    return await signInWithEmailAndPassword(auth, email, password);
+  }
+
+  // export const signInAuthUserWithEmailAndPassword = async (email, password) => {
+  //   if (!email || !password) return;
+  
+  //   try {
+  //     const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  //     return userCredential.user;
+  //   } catch (error) {
+  //     throw error; // Let the caller handle the specific error
+  //   }
+  // };
