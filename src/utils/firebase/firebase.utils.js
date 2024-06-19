@@ -3,7 +3,9 @@ import {
     getAuth,
     signInWithRedirect, signInWithPopup, GoogleAuthProvider ,
     createUserWithEmailAndPassword,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
 } from 'firebase/auth'
 // firebaseCreateUserWithEmailAndPassword
 import {
@@ -86,13 +88,6 @@ getAuth().settings.logLevel = 'debug';
     return await signInWithEmailAndPassword(auth, email, password);
   }
 
-  // export const signInAuthUserWithEmailAndPassword = async (email, password) => {
-  //   if (!email || !password) return;
-  
-  //   try {
-  //     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-  //     return userCredential.user;
-  //   } catch (error) {
-  //     throw error; // Let the caller handle the specific error
-  //   }
-  // };
+export const signOutUser = async() => await signOut(auth);
+
+export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);

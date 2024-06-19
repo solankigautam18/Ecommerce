@@ -1,6 +1,7 @@
 import { useState } from "react";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
+
 import {
     signInWithGooglePopup, createUserDocumentFromAuth,
     signInAuthUserWithEmailAndPassword } from "../../../utils/firebase/firebase.utils";
@@ -21,36 +22,26 @@ const SignInForm = () => {
     };
 
     const SignInWithGoogle = async() => {
-        const {user} = await signInWithGooglePopup();
-         await createUserDocumentFromAuth(user);
+     await signInWithGooglePopup();
     };
-
-    // const handleSubmit = async (event) => {
-    //     event.preventDefault();
-    //     try{
-    //         const response = await signInAuthUserWithEmailAndPassword(email, password);
-    //         console.log(response);
-    //         resetFormFields();
-    //     } catch(error) {
-    //         console.log(error);
-    //     }
-    // };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             const user = await signInAuthUserWithEmailAndPassword(email, password);
-            console.log('Successful login:', user);
             resetFormFields();
         } catch (error) {
-            switch(error.code){
-                case 'auth/wrong-password' : alert('incorrect password for email');
-                break;
-                case 'auth/user-not-found' : alert('User not found');
-                break;
-                default:
-                    console.log(error);
-            }
+            // switch(error.code){
+            //     case 'auth/wrong-password' : alert('incorrect password for email');
+            //     break;
+            //     case 'auth/user-not-found' : alert('User not found');
+            //     break;
+            //     default:
+            //         console.log(error);
+            // }
+            if(error.code === 'auth/wrong-password') alert('Incorrect password for email');
+            else alert('Invalid Credentials, Please try again later');
+            // console.log(error.code);
         }
     };
 
